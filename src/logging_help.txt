@@ -13,9 +13,7 @@ prints:
 
 Using logging provides several advantages over using print or printf statements:
 
-First, it allows you to control the visibility and presentation of messages without editing the source code.
-
-For example, in contrast to the Warning() above
+First, it allows you to control the visibility and presentation of messages without editing the source code. For example, in contrast to the Warning() above
 
 <hansl>
     Debug("This is a debugging message")
@@ -60,20 +58,19 @@ where 'msg' is some string which gets printed to the console. Nothing is returne
 
 Loglevel
 --------
-
 The importance of an event can also be called the "level". Gretl currently supports five log-levels which can be set through the "set loglevel <LEVEL>" command where <LEVEL> can be either be an integer or string value. The currently set loglevel can be accessed by gretl's built-in $loglevel accessor.
 
-The following levels are supported:
+The following levels are built into gretl since version 2020c:
 
 level-name   integer    string
 ------------------------------
 debug          0         debug
-info           0         info
-warning        0         warning
-error          0         error
-critical       0         critical
+info           1         info
+warning        2         warn
+error          3         error
+critical       4         critical
 
-To determine when to use logging, see the table below, which states, for each of a set of common tasks, the best tool to use for it (These definitions are borrowed from: https://docs.python.org/3/howto/logging.html).
+To determine when to use logging, see the table below, which states, for each set of common tasks, the best tool to use for it (These definitions are borrowed from: https://docs.python.org/3/howto/logging.html).
 
 Debug: Detailed information, typically of interest only when diagnosing problems.
 
@@ -109,9 +106,9 @@ Logging to a file
 -----------------
 A common situation is that of recording logging events in a file. This is currently not supported by gretl. However, you can always direct stdout and stderror output to a log-file.
 
-For instance, when executing a gretl script via the terminal or shell on linux, one can direct the _all_ output to some file by:
+For instance, when executing a gretl script via the terminal or shell on linux, one can direct _all_ output to some file by:
 <>
-gretlcli -b > mylogfile.txt 2>&1
+gretlcli -b MYSCRIPT.inp > mylogfile.txt 2>&1
 </>
 
 An alternative way would be to make use of gretl's "outfile" command (see 'help outfile' for details).

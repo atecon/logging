@@ -1,13 +1,13 @@
 clear
 set verbose off
 
-include logging.gfn --force
+include logging.gfn
 
-set logstamp on # or not
+set logstamp off   # on/off: print timstamp or not
 
 
 set loglevel debug
-printf "\n\nloglevel = %s\n", $loglevel
+printf "\n\nloglevel = %d\n", $loglevel
 Debug("Should be printed")
 Info("Should be printed")
 Warn("Should be printed")
@@ -15,15 +15,15 @@ Error("Should be printed")
 Critical("Should be printed")
 
 set loglevel info
-printf "\n\nloglevel = %s\n", $loglevel
+printf "\n\nloglevel = %d\n", $loglevel
 Debug("Should NOT be printed")
 Info("Should be printed")
 Warn("Should be printed")
 Error("Should be printed")
 Critical("Should be printed")
 
-set loglevel warning
-printf "\n\nloglevel = %s\n", $loglevel
+set loglevel warn
+printf "\n\nloglevel = %d\n", $loglevel
 Debug("Should NOT be printed")
 Info("Should NOT be printed")
 Warn("Should be printed")
@@ -31,7 +31,7 @@ Error("Should be printed")
 Critical("Should be printed")
 
 set loglevel error
-printf "\n\nloglevel = %s\n", $loglevel
+printf "\n\nloglevel = %d\n", $loglevel
 Debug("Should NOT be printed")
 Info("Should NOT be printed")
 Warn("Should NOT be printed")
@@ -39,7 +39,7 @@ Error("Should be printed")
 Critical("Should be printed")
 
 set loglevel critical
-printf "\n\nloglevel = %s\n", $loglevel
+printf "\n\nloglevel = %d\n", $loglevel
 Debug("Should NOT be printed")
 Info("Should NOT be printed")
 Warn("Should NOT be printed")

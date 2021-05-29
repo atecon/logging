@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gretl-functions>
+<gretl-function-package name="logging" no-data-ok="true" minver="2021c">
+<author email="atecon@posteo.de">Artur Tarassow</author>
+<version>0.1</version>
+<date>2021-05-29</date>
+<description>Record the history of a computation as a log of events.</description>
+<tags>C81</tags>
+<help>
+This package provides a way to record the history and progress of a computation as a log of events.
+
+The user adds logging calls to their code to indicate that certain events have occurred. Events are created by inserting a logging statement into the source code, for example:
+
+&lt;hansl&gt;
+    Warning(&quot;Task XY failed.&quot;)
+&lt;/hansl&gt;
+
+prints:
+&lt;printout&gt;
+    WARNING: Task XY failed.
+&lt;/printout&gt;
+
+Using logging provides several advantages over using print or printf statements:
+
+First, it allows you to control the visibility and presentation of messages without editing the source code. For example, in contrast to the Warning() above
+
+&lt;hansl&gt;
+    Debug(&quot;This is a debugging message&quot;)
+&lt;/hansl&gt;
+
+will produce no output by default.
+
+Second, it's very cheap to leave debug statements like this in the source code because the system avoids evaluating the message if it would later be ignored.
+
+In this case, the associated string processing of &lt;&quot;This is a debugging message&quot;&gt; will never be executed unless debug logging is enabled.
+
+Third, the logging tools allow you to attach arbitrary data to each event. This allows you to capture local variables and other program state for later analysis. For example, to you can use:
+
+&lt;hansl&gt;
+    Info(sprintf(&quot;Some vector %g&quot;, mnormal(3, 1)
+&lt;/hansl&gt;
+
+which prints to the console
+
+&lt;printout&gt;
+    some vector:
+    -0.915662
+    -0.542417
+    -0.362014
+&lt;/printout&gt;
+
+
+Public functions
+----------------
+&quot;logging&quot; provides a set of convenience functions for simple logging usage. These are:
+- Debug()
+- Info()
+- Warning()
+- Error()
+- Critical().
+
+All functions share the same structure, e.g.
+&lt;Info(const string msg)&gt;
+where 'msg' is some string which gets printed to the console. Nothing is returned by this function.
+
+
+
+Loglevel
+--------
+The importance of an event can also be called the &quot;level&quot;. Gretl currently supports five log-levels which can be set through the &quot;set loglevel &lt;LEVEL&gt;&quot; command where &lt;LEVEL&gt; can be either be an integer or string value. The currently set loglevel can be accessed by gretl's built-in $loglevel accessor.
+
+The following levels are built into gretl since version 2020c:
+
+level-name   integer    string
+------------------------------
+debug          0         debug
+info           1         info
+warning        2         warn
+error          3         error
+critical       4         critical
+
+To determine when to use logging, see the table below, which states, for each set of common tasks, the best tool to use for it (These definitions are borrowed from: https://docs.python.org/3/howto/logging.html).
+
+Debug: Detailed information, typically of interest only when diagnosing problems.
+
+Info: Confirmation that things are working as expected.
+
+Warning: An indication that something unexpected happened, or indicative of some problem in the near future (e.g. ‘disk space low’). The software is still working as expected.
+
+Error: Due to a more serious problem, the software has not been able to perform some function.
+
+Critical: A serious error, indicating that the program itself may be unable to continue running.
+
+
+Logging with timestamp
+----------------------
+Gretl includes the &quot;set logstamp &lt;VALUE&gt;&quot; command where &lt;VALUE&gt; is a boolean: set off/0/false for no timestamp, on/1/true for timestamps. The currently set logstamp can be accessed by gretl's built-in $logstamp accessor.
+
+
+
+A very simple example
+---------------------
+&lt;hansl&gt;
+    include logging.gfn
+    Warning(&quot;Watch out!&quot;)          # will print a message to the console
+    Info(&quot;I told you so&quot;)          # will not print anything
+&lt;/hansl&gt;
+
+and you will see
+&lt;WARNING: Watch out!&gt;
+printed out on the console.
+
+
+Logging to a file
+-----------------
+A common situation is that of recording logging events in a file. This is currently not supported by gretl. However, you can always direct stdout and stderror output to a log-file.
+
+For instance, when executing a gretl script via the terminal or shell on linux, one can direct _all_ output to some file by:
+&lt;&gt;
+gretlcli -b MYSCRIPT.inp &gt; mylogfile.txt 2&gt;&amp;1
+&lt;/&gt;
+
+An alternative way would be to make use of gretl's &quot;outfile&quot; command (see 'help outfile' for details).
+
+
+
+Changelog:
+----------
+v0.1 (May 2021)
+- Initial version.
+</help>
+<gretl-function name="Debug" type="void">
+ <params count="1">
+  <param name="msg" type="string" const="true"/>
+ </params>
+<code>/* Debug level.*/
+if $loglevel &lt;= 0
+  print_log_msg(msg, &quot;DEBUG&quot;)
+endif
+</code>
+</gretl-function>
+<gretl-function name="Info" type="void">
+ <params count="1">
+  <param name="msg" type="string" const="true"/>
+ </params>
+<code>/* Info level.*/
+if $loglevel &lt;= 1
+  print_log_msg(msg, &quot;INFO&quot;)
+endif
+</code>
+</gretl-function>
+<gretl-function name="Warn" type="void">
+ <params count="1">
+  <param name="msg" type="string" const="true"/>
+ </params>
+<code>/* Warning level.*/
+if $loglevel &lt;= 2
+  print_log_msg(msg, &quot;WARNING&quot;)
+endif
+</code>
+</gretl-function>
+<gretl-function name="Error" type="void">
+ <params count="1">
+  <param name="msg" type="string" const="true"/>
+ </params>
+<code>/* Error level.*/
+if $loglevel &lt;= 3
+  print_log_msg(msg, &quot;ERROR&quot;)
+endif
+</code>
+</gretl-function>
+<gretl-function name="Critical" type="void">
+ <params count="1">
+  <param name="msg" type="string" const="true"/>
+ </params>
+<code>/* Critical level.*/
+if $loglevel &lt;= 4
+  print_log_msg(msg, &quot;CRITICAL&quot;)
+endif
+</code>
+</gretl-function>
+<gretl-function name="print_log_msg" type="void" private="1">
+ <params count="2">
+  <param name="msg" type="string" const="true"/>
+  <param name="level" type="string" const="true"/>
+ </params>
+<code>/* Print the log meesage with or without timestamp. */
+if $logstamp
+  string fmt = &quot;%Y-%m-%d %H:%M:%S %Z&quot;
+  printf &quot;\n%s %s: %s\n&quot;, level, strftime($now[1], fmt), msg
+else
+  printf &quot;\n%s: %s\n&quot;, level, msg
+endif
+</code>
+</gretl-function>
+<sample-script>
+clear
+set verbose off
+
+include logging.gfn
+
+set logstamp off   # on/off: print timstamp or not
+
+
+set loglevel debug
+printf &quot;\n\nloglevel = %d\n&quot;, $loglevel
+Debug(&quot;Should be printed&quot;)
+Info(&quot;Should be printed&quot;)
+Warn(&quot;Should be printed&quot;)
+Error(&quot;Should be printed&quot;)
+Critical(&quot;Should be printed&quot;)
+
+set loglevel info
+printf &quot;\n\nloglevel = %d\n&quot;, $loglevel
+Debug(&quot;Should NOT be printed&quot;)
+Info(&quot;Should be printed&quot;)
+Warn(&quot;Should be printed&quot;)
+Error(&quot;Should be printed&quot;)
+Critical(&quot;Should be printed&quot;)
+
+set loglevel warn
+printf &quot;\n\nloglevel = %d\n&quot;, $loglevel
+Debug(&quot;Should NOT be printed&quot;)
+Info(&quot;Should NOT be printed&quot;)
+Warn(&quot;Should be printed&quot;)
+Error(&quot;Should be printed&quot;)
+Critical(&quot;Should be printed&quot;)
+
+set loglevel error
+printf &quot;\n\nloglevel = %d\n&quot;, $loglevel
+Debug(&quot;Should NOT be printed&quot;)
+Info(&quot;Should NOT be printed&quot;)
+Warn(&quot;Should NOT be printed&quot;)
+Error(&quot;Should be printed&quot;)
+Critical(&quot;Should be printed&quot;)
+
+set loglevel critical
+printf &quot;\n\nloglevel = %d\n&quot;, $loglevel
+Debug(&quot;Should NOT be printed&quot;)
+Info(&quot;Should NOT be printed&quot;)
+Warn(&quot;Should NOT be printed&quot;)
+Error(&quot;Should NOT be printed&quot;)
+Critical(&quot;Should be printed&quot;)
+
+print &quot;==========================================&quot;
+
+
+function void foo (void)
+    Debug(&quot;Some debug msg&quot;)
+    Info(&quot;Some info msg&quot;)
+    Warn(&quot;Some warning msg&quot;)
+    Error(&quot;Some error msg&quot;)
+    Critical(&quot;Some critical msg&quot;)
+end function
+
+printf &quot;\nCalls to messaging functions via function foo\n&quot;
+
+loop i=0..4
+   printf &quot;\nloglevel = %d:\n&quot;, i
+   set loglevel $i
+   foo()
+endloop
+printf &quot;\n&quot;
+</sample-script>
+</gretl-function-package>
+</gretl-functions>

@@ -7,7 +7,7 @@ include assertion.gfn
 include "./src/logging.inp" --force
 
 
-set logstamp FALSE          # Timestamp is deactivated as we cannot mock it
+set logstamp off          # Timestamp is deactivated as we cannot mock it
 
 # helper function
 function void print_logs (void)
@@ -20,20 +20,19 @@ end function
 
 
 
-# FOR loglevel "debug"
-set loglevel debug
-
 bundle Expected = _(\
                     Debug="DEBUG: This is a Debug message.",\
                     Info="INFO: This is a Info message.",\
-                    Warning="WARNING: This is a Warning message.",\
+                    Warn="WARNING: This is a Warning message.",\
                     Error="ERROR: This is a Error message.",\
                     Critical="CRITICAL: This is a Critical message."\
                     )
-bundle NotExpected
+bundle NotExpected = null
 
 function void test_debug (const bundle Expected, const bundle NotExpected)
     print "Start testing loglevel 'debug'."
+
+    set loglevel debug
 
     string actual
     outfile --buffer=actual
@@ -45,28 +44,27 @@ function void test_debug (const bundle Expected, const bundle NotExpected)
     endloop
 
     loop foreach i NotExpected
-        assert(instring(actual, Expected["$i"]) == FALSE)
+        assert(instring(actual, NotExpected["$i"]) == FALSE)
     endloop
 end function
 test_debug(Expected, NotExpected)
 
 
 
-# FOR loglevel "info"
-set loglevel info
-
 bundle Expected = _(\
                     Info="INFO: This is a Info message.",\
-                    Warning="WARNING: This is a Warning message.",\
+                    Warn="WARNING: This is a Warning message.",\
                     Error="ERROR: This is a Error message.",\
                     Critical="CRITICAL: This is a Critical message."\
                     )
 bundle NotExpected = _(\
-                       Debug="DEBUG: This is a Debug message.",
+                       Debug="DEBUG: This is a Debug message."\
                        )
 
 function void test_info (const bundle Expected, const bundle NotExpected)
     print "Start testing loglevel 'info'."
+
+    set loglevel info
 
     string actual
     outfile --buffer=actual
@@ -78,28 +76,27 @@ function void test_info (const bundle Expected, const bundle NotExpected)
     endloop
 
     loop foreach i NotExpected
-        assert(instring(actual, Expected["$i"]) == FALSE)
+        assert(instring(actual, NotExpected["$i"]) == FALSE)
     endloop
 end function
 test_info(Expected, NotExpected)
 
 
 
-# FOR loglevel "warning"
-set loglevel warning
-
 bundle Expected = _(\
-                    Warning="WARNING: This is a Warning message.",\
+                    Warn="WARNING: This is a Warning message.",\
                     Error="ERROR: This is a Error message.",\
                     Critical="CRITICAL: This is a Critical message."\
                     )
 bundle NotExpected = _(\
                        Debug="DEBUG: This is a Debug message.",\
-                       Info="INFO: This is a Info message.",
+                       Info="INFO: This is a Info message."\
                        )
 
 function void test_warning (const bundle Expected, const bundle NotExpected)
     print "Start testing loglevel 'warning'."
+
+    set loglevel warn
 
     string actual
     outfile --buffer=actual
@@ -111,16 +108,13 @@ function void test_warning (const bundle Expected, const bundle NotExpected)
     endloop
 
     loop foreach i NotExpected
-        assert(instring(actual, Expected["$i"]) == FALSE)
+        assert(instring(actual, NotExpected["$i"]) == FALSE)
     endloop
 end function
 test_warning(Expected, NotExpected)
 
 
 
-# FOR loglevel "error"
-set loglevel error
-
 bundle Expected = _(\
                     Error="ERROR: This is a Error message.",\
                     Critical="CRITICAL: This is a Critical message."\
@@ -128,11 +122,13 @@ bundle Expected = _(\
 bundle NotExpected = _(\
                        Debug="DEBUG: This is a Debug message.",\
                        Info="INFO: This is a Info message.",\
-                       Warning="WARNING: This is a Warning message.",
+                       Warn="WARNING: This is a Warning message."\
                        )
 
 function void test_error (const bundle Expected, const bundle NotExpected)
     print "Start testing loglevel 'error'."
+
+    set loglevel error
 
     string actual
     outfile --buffer=actual
@@ -144,15 +140,12 @@ function void test_error (const bundle Expected, const bundle NotExpected)
     endloop
 
     loop foreach i NotExpected
-        assert(instring(actual, Expected["$i"]) == FALSE)
+        assert(instring(actual, NotExpected["$i"]) == FALSE)
     endloop
 end function
 test_error(Expected, NotExpected)
 
 
-
-# FOR loglevel "critical"
-set loglevel critical
 
 bundle Expected = _(\
                     Critical="CRITICAL: This is a Critical message."\
@@ -160,12 +153,14 @@ bundle Expected = _(\
 bundle NotExpected = _(\
                        Debug="DEBUG: This is a Debug message.",\
                        Info="INFO: This is a Info message.",\
-                       Warning="WARNING: This is a Warning message.",\
-                       Error="ERROR: This is a Error message.",\
+                       Warn="WARNING: This is a Warning message.",\
+                       Error="ERROR: This is a Error message."\
                        )
 
 function void test_critical (const bundle Expected, const bundle NotExpected)
     print "Start testing loglevel 'critical'."
+
+    set loglevel critical
 
     string actual
     outfile --buffer=actual
@@ -177,7 +172,7 @@ function void test_critical (const bundle Expected, const bundle NotExpected)
     endloop
 
     loop foreach i NotExpected
-        assert(instring(actual, Expected["$i"]) == FALSE)
+        assert(instring(actual, NotExpected["$i"]) == FALSE)
     endloop
 end function
 test_critical(Expected, NotExpected)
