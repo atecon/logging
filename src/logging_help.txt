@@ -110,7 +110,12 @@ Logging to a file
 A common situation is that of recording logging events in a file. This is currently not supported by gretl. However, you can always direct stdout and stderror output to a log-file.
 
 For instance, when executing a gretl script via the terminal or shell on linux, one can direct the _all_ output to some file by:
-<gretlcli -b > mylogfile.txt 2>&1
+<>
+gretlcli -b > mylogfile.txt 2>&1
+</>
+
+An alternative way would be to make use of gretl's "outfile" command (see 'help outfile' for details).
+
 
 
 Changelog:
