@@ -1,9 +1,9 @@
 This package provides a way to record the history and progress of a computation as a log of events.
 
-The user adds logging calls to their code to indicate that certain events have occurred. Events are created by inserting a logging statement into the source code, for example:
+The user adds logging calls to her code to indicate that certain events have occurred. Events are created by inserting a logging statement into the source code, for example:
 
 <hansl>
-    Warning("Task XY failed.")
+    Warn("Task XY failed.")
 </hansl>
 
 prints:
@@ -13,7 +13,7 @@ prints:
 
 Using logging provides several advantages over using print or printf statements:
 
-First, it allows you to control the visibility and presentation of messages without editing the source code. For example, in contrast to the Warning() above
+First, it allows you to control the visibility and presentation of messages without editing the source code. For example, in contrast to the Warn() above
 
 <hansl>
     Debug("This is a debugging message")
@@ -25,10 +25,10 @@ Second, it's very cheap to leave debug statements like this in the source code b
 
 In this case, the associated string processing of <"This is a debugging message"> will never be executed unless debug logging is enabled.
 
-Third, the logging tools allow you to attach arbitrary data to each event. This allows you to capture local variables and other program state for later analysis. For example, to you can use:
+Third, the logging tools allow you to attach arbitrary data to each event. This allows you to capture local variables and other program states for later analysis. For example, you can use:
 
 <hansl>
-    Info(sprintf("Some vector %g", mnormal(3, 1)
+    Info( sprintf("Some vector %g", mnormal(3, 1)) )
 </hansl>
 
 which prints to the console
@@ -46,19 +46,18 @@ Public functions
 "logging" provides a set of convenience functions for simple logging usage. These are:
 - Debug()
 - Info()
-- Warning()
+- Warn()
 - Error()
-- Critical().
+- Critical()
 
-All functions share the same structure, e.g.
+All functions share the same simple signature, e.g.
 <Info(const string msg)>
 where 'msg' is some string which gets printed to the console. Nothing is returned by this function.
 
 
-
 Loglevel
 --------
-The importance of an event can also be called the "level". Gretl currently supports five log-levels which can be set through the "set loglevel <LEVEL>" command where <LEVEL> can be either be an integer or string value. The currently set loglevel can be accessed by gretl's built-in $loglevel accessor.
+The importance of an event can also be called the "level". Gretl currently supports five log-levels which can be set through the "set loglevel <LEVEL>" command where <LEVEL> can be either be an integer or string value. The currently set "loglevel" can be accessed by gretl's built-in $loglevel accessor.
 
 The following levels are built into gretl since version 2020c:
 
@@ -76,25 +75,24 @@ Debug: Detailed information, typically of interest only when diagnosing problems
 
 Info: Confirmation that things are working as expected.
 
-Warning: An indication that something unexpected happened, or indicative of some problem in the near future (e.g. ‘disk space low’). The software is still working as expected.
+Warn(): An indication that something unexpected happened, or indicative of some problem in the near future (e.g. ‘disk space low’). The software is still working as expected.
 
-Error: Due to a more serious problem, the software has not been able to perform some function.
+Error(): Due to a more serious problem, the software has not been able to perform some function.
 
-Critical: A serious error, indicating that the program itself may be unable to continue running.
+Critical(): A serious error, indicating that the program itself may be unable to continue running.
 
 
 Logging with timestamp
 ----------------------
-Gretl includes the "set logstamp <VALUE>" command where <VALUE> is a boolean: set off/0/false for no timestamp, on/1/true for timestamps. The currently set logstamp can be accessed by gretl's built-in $logstamp accessor.
+Gretl includes the "set logstamp <VALUE>" command where <VALUE> is a boolean: set off/0/false/FALSE for no timestamp, on/1/true/TRUE for timestamps. The currently set "logstamp" can be accessed by gretl's built-in $logstamp accessor.
 
 
-
-A very simple example
----------------------
+A simple example
+----------------
 <hansl>
     include logging.gfn
-    Warning("Watch out!")          # will print a message to the console
-    Info("I told you so")          # will not print anything
+    Warn("Watch out!")             # will print a message to the console
+    Debug("I told you so")         # will not print anything
 </hansl>
 
 and you will see
@@ -117,6 +115,6 @@ An alternative way would be to make use of gretl's "outfile" command (see 'help 
 
 Changelog:
 ----------
-v0.1 (May 2021)
+v0.1 (June 2021)
 - Initial version.
 
