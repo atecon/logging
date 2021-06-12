@@ -8,3 +8,4 @@ session.inp
 *.spec
 *.txt
 *.inp
+Makefile
