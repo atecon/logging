@@ -1,6 +1,10 @@
+# Ignore the following files in root folder which are partyl created by make command
 session.inp
 *.csv
 *.gdt
 *.gdtb
 *.gbin
 *.dta
+*.spec
+*.txt
+*.inp
